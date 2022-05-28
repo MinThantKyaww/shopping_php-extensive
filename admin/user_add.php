@@ -1,7 +1,7 @@
 <?php
 session_start();
-require 'config/config.php';
-require 'config/common.php';
+require '../config/config.php';
+require '../config/common.php';
 
 if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
   header('Location: login.php');
@@ -72,7 +72,7 @@ if (!empty($_POST)) {
             <p style="color:red;"><?php echo empty($emailError) ? '' : $emailError;?></p>
             <div class="form-group">
                 <label for="password">Password</label></br>
-                <input type="passsword" class="form-control" name="password" value="" >
+                <input type="password" class="form-control" name="password" value="" >
             </div><br>
             <p style="color:red;"><?php echo empty($passwordError) ? '' : $passwordError;?></p>
             <div class="form-group">

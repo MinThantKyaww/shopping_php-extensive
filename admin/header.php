@@ -41,6 +41,7 @@
           $link_array = explode('/',$link);
           $page = end($link_array);
         ?>  
+        <?php if ($page == 'index.php' || $page == 'category.php' || $page == 'user_listenings.php') {?>
         <li class="nav-item">
           <a class="nav-link" data-widget="navbar-search" href="#" role="button">
             <i class="fas fa-search"></i>
@@ -70,6 +71,8 @@
             </form>
           </div>
         </li>
+        <?php
+        }?>
       </ul>
     </nav>
     <!-- Preloader -->
@@ -127,6 +130,14 @@
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Users
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="order-list.php" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Orders
               </p>
             </a>
           </li>

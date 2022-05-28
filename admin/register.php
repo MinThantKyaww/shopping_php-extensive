@@ -1,7 +1,7 @@
 <?php
 session_start();
-require 'config.php';
-require 'commmon.php';
+require '../config.php';
+require '../commmon.php';
 
 if (!empty($_POST)) {
     $username=$_POST['name'];

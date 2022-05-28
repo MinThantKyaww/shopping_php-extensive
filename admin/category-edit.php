@@ -1,7 +1,7 @@
 <?php
     session_start();
-    require 'config/config.php';
-    require 'config/common.php';
+    require '../config/config.php';
+    require '../config/common.php';
     
     if (empty($_SESSION['user_id']) ||  empty($_SESSION['logged_in'])) {
         echo "<script>

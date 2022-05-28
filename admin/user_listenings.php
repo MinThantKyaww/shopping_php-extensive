@@ -1,7 +1,7 @@
 <?php
     session_start();
-    require 'config/config.php';
-    require 'config/common.php';
+    require '../config/config.php';
+    require '../config/common.php';
     if (empty($_SESSION['user_id']) ||  empty($_SESSION['logged_in'])) {
         echo "<script>
         alert('please log in to continue:');
@@ -46,7 +46,7 @@
       
     }
     else {
-    	$searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
+    	$searchKey = empty($_POST['search']) ? $_COOKIE['search'] : $_POST['search'];
       $pdostatement = $pdo->prepare("SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC");
       $pdostatement->execute();
       $rawResult = $pdostatement->fetchAll();
