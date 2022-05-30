@@ -10,6 +10,8 @@ $category = $_POST['category'];
 $quantity = $_POST['quantity'];
 $price = $_POST['price'];
 $id=$_POST['id'];
+$updated_at= date("Y-m-d H:i:s");
+
   if ($_FILES['image']['name'] != null) {
 
     $image=$_FILES['image']['name'];
@@ -26,10 +28,10 @@ $id=$_POST['id'];
       echo "<script>alert('name,description,category,quantity or price cannot be empty');</script>";
     }else{
       $stmt = $pdo->prepare("UPDATE products SET name=:name,description=:description,category_id=:category,
-                              price=:price,quantity=:quantity,image=:image WHERE id=:id");
+                              price=:price,quantity=:quantity,image=:image,updated_at=:updated_at WHERE id=$id");
 
       $result = $stmt->execute(
-            array(':name'=>$name,':description'=>$description,':category'=>$category,':price'=>$price,':quantity'=>$quantity,':image'=>$image,':id'=>$id)
+            array(':name'=>$name,':description'=>$description,':category'=>$category,':price'=>$price,':quantity'=>$quantity,':image'=>$image,':updated_at'=>$updated_at)
         );
 
       if ($result) {
@@ -38,11 +40,11 @@ $id=$_POST['id'];
     }
   }else{
     $stmt = $pdo->prepare("UPDATE products SET name=:name,description=:description,category_id=:category,
-                              price=:price,quantity=:quantity WHERE id=:id");
+                              price=:price,quantity=:quantity,updated_at=:updated_at WHERE id=$id");
 
     $result = $stmt->execute(
             array(':name'=>$name,':description'=>$description,':category'=>$category,':price'=>$price,
-              ':quantity'=>$quantity,':id'=>$id)
+              ':quantity'=>$quantity,':updated_at'=>$updated_at)
         );
 
     if ($result) {

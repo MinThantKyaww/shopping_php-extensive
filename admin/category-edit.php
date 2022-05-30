@@ -22,10 +22,12 @@
         $name = $_POST['name'];
         $description = $_POST['description'];
         $id = $_POST['id'];
+        $updated_at= date("Y-m-d H:i:s");
 
-         $stmt = $pdo->prepare("UPDATE categories SET name=:name,description=:description WHERE id=$id");
+         $stmt = $pdo->prepare("UPDATE categories SET name=:name,description=:description,
+          updated_at=:updated_at WHERE id=$id");
         $result = $stmt->execute(
-            array(':name'=>$name,':description'=>$description)
+            array(':name'=>$name,':description'=>$description,':updated_at'=>$updated_at)
           );
         
         if ($result) {

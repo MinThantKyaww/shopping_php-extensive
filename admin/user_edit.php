@@ -7,6 +7,7 @@
       $name = $_POST['name'];
       $email = $_POST['email'];
       $id=$_GET['id'];
+      $updated_at= date("Y-m-d H:i:s");
 
         if (empty($_POST['role'])) {
             $role = 0;
@@ -23,7 +24,8 @@
             $emailError = 'email cannot be empty';
         }
         } else {
-            $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email',role='$role' WHERE id ='$id'");
+            $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email',role='$role',
+                updated_at='$updated_at' WHERE id ='$id'");
         $result = $pdostatement->execute();
         if($result) {
               echo "<script>alert('record update successful:');window.location.href='user_listenings.php';</script>";

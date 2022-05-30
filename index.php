@@ -69,6 +69,19 @@
 
           
         ?>
+
+        <!-- Start Banner Area -->
+				<section class="banner-area organic-breadcrumb">
+					<div class="container">
+						<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+							<div class="col-first">
+								<h1>Welcome</h1>
+
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- End Banner Area -->
 				<!-- End Filter Bar -->
 				<!-- Start Best Seller -->
 				<div class="container">
@@ -111,22 +124,30 @@
 						<?php foreach ($result as $key => $value) { ?>
 						<div class="col-lg-4 col-md-6">
 							<div class="single-product">
-									<img class="" width="250px" height="200px"
+									<a href="product-details.php?id=<?php echo $value['id'] ?>">
+										<img class="" width="250px" height="200px"
 									src="admin/images/<?php echo escape($value['image']) ?>" alt="">
+									</a>
 								<div class="product-details">
 									<h6><?php echo escape($value['name']) ?></h6>
 									<div class="price">
 										<h6><?php echo escape($value['price']) ?></h6>
 									</div>
 									<div class="prd-bottom">
-										<a href="" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
-										<a href="" class="social-info">
+										<form action="addtocart.php" method="post">
+										<input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+            				<input type="hidden" name="id" value="<?php echo escape($value['id'])?>">
+            				<input type="hidden" name="qty" value="1">
+											<div class="social-info">
+												<button type="submit" class="social-info" style="display: contents;">
+												<span class="ti-bag"></span><p style="left: 20px" class="hover-text">add to bag</p>
+											</button>
+											</div>
+										<a href="product-details.php?id=<?php echo $value['id'] ?>" class="social-info">
 											<span class="lnr lnr-move"></span>
 											<p class="hover-text">view more</p>
 										</a>
+										</form>
 									</div>
 								</div>
 							</div>

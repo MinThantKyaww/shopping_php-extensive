@@ -29,7 +29,7 @@
   else {
     $pageno = 1;
   }
-    $frames = 1;
+    $frames = 5;
     $offset = ($pageno - 1) * $frames;
 
     if (empty($_POST['search']) && !isset($_COOKIE['search'])) {
