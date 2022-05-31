@@ -20,10 +20,18 @@ require 'config/config.php';
 						<div class="s_product_text">
 						<h3><?php echo escape($result['name']) ?></h3>
 						<h2><?php echo escape($result['price']) ?></h2>
+						<?php
+							$cStmt = $pdo->prepare("SELECT name FROM categories WHERE 
+								id=".$result['category_id']);
+							$cStmt->execute();
+							$cRresult = $cStmt->fetch(PDO::FETCH_ASSOC);
+						?>
 						<ul class="list">
-							<li><a class="active" href="#"><span>Category</span> : Household</a></li>
+							<li><a class="active" href="#"><span>Category</span>
+								<?php echo $cRresult['name']; ?> </a></li>
 							<li><a href="#"><span>Availibility</span>
-							<?php echo escape($result['quantity']) ?> : In Stock</a></li>
+							<?php echo 
+							escape($result['quantity']) == 0 ? 'Out Of Stock' : $result['quantity'].'In Stock' ?></a></li>
 						</ul>
 						<p><?php echo escape($result['description']) ?></p>
 						<form action="addtocart.php" method="post">
@@ -47,6 +55,6 @@ require 'config/config.php';
 				</div>
 			</div>
 		</div>
-	</div>
+	</div><br><br>
 	<!--================End Single Product Area =================-->
 <?php include 'footer.php'; ?>

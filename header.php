@@ -1,6 +1,12 @@
 <?php
 	session_start();
 	require 'config/common.php';
+	if (empty($_SESSION['user_id']) || empty($_SESSION['logged_in'])) {
+		echo "<script>
+        alert('please log in to continue:');
+        window.location.href='login.php';
+        </script>";
+	}
 ?>
 
 <!DOCTYPE html>

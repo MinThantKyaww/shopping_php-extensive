@@ -12,7 +12,19 @@ $price = $_POST['price'];
 $id=$_POST['id'];
 $updated_at= date("Y-m-d H:i:s");
 
-  if ($_FILES['image']['name'] != null) {
+  if (is_numeric($_POST['quantity']) != 1) {
+    $quantityError = "Quantity must be integer";
+  }else{
+    $quantityError = '';
+  }
+  if (is_numeric($_POST['price']) != 1) {
+    $priceError = "Price must be integer";
+  }else{
+    $priceError = '';
+  }
+            
+  if ($quantityError == '' && $priceError == ''){
+    if ($_FILES['image']['name'] != null) {
 
     $image=$_FILES['image']['name'];
     $targetFile = 'images/'.($_FILES['image']['name']);
@@ -39,17 +51,18 @@ $updated_at= date("Y-m-d H:i:s");
       }
     }
   }else{
-    $stmt = $pdo->prepare("UPDATE products SET name=:name,description=:description,category_id=:category,
-                              price=:price,quantity=:quantity,updated_at=:updated_at WHERE id=$id");
+      $stmt = $pdo->prepare("UPDATE products SET name=:name,description=:description,category_id=:category,
+                                price=:price,quantity=:quantity,updated_at=:updated_at WHERE id=$id");
 
-    $result = $stmt->execute(
-            array(':name'=>$name,':description'=>$description,':category'=>$category,':price'=>$price,
-              ':quantity'=>$quantity,':updated_at'=>$updated_at)
-        );
+      $result = $stmt->execute(
+              array(':name'=>$name,':description'=>$description,':category'=>$category,':price'=>$price,
+                ':quantity'=>$quantity,':updated_at'=>$updated_at)
+          );
 
-    if ($result) {
-          echo "<script>alert('Product is updated without changing photo');window.location.href='index.php';</script>";
-    }
+      if ($result) {
+            echo "<script>alert('Product is updated without changing photo');window.location.href='index.php';</script>";
+      }
+  }
   }
 }
 
@@ -83,12 +96,12 @@ $updated_at= date("Y-m-d H:i:s");
                     <label for="">Category</label><p style="color:red"><?php echo empty($catError) ? '' : '*'.$catError; ?></p>
                     <select class="form-control" class="" name="category">
                       <option value="">SELECT CATEGORY</option>
-                      <?php foreach ($catResult as $value) { ?>
-                        <?php if ($value['id'] == $result[0]['category_id']) : ?>
+                      <?php foreach ($catResult as $value) {?>
+                        <?php if($value['id'] == $result[0]['category_id']): ?>
                           <option value="<?php echo $value['id']?>" selected><?php echo $value['name']?></option>
-                        <?else :?>
+                        <?php else: ?>
                           <option value="<?php echo $value['id']?>"><?php echo $value['name']?></option>
-                        <?php endif?>
+                        <?php endif ?>
                       <?php } ?>
                     </select>
             </div>

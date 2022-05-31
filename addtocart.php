@@ -19,11 +19,7 @@ if ($_POST) {
 	}
 
 	header("location: cart.php");
-	}
-
-
-	
-	
+	}	
 }
 
 ?>

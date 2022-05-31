@@ -11,56 +11,60 @@
     }
 
     if ($_POST) {
-      if (empty($_POST['name']) || empty($_POST['description']) || empty($_POST['category']) 
+        if (empty($_POST['name']) || empty($_POST['description']) || empty($_POST['category']) 
           || empty($_POST['quantity']) || empty($_POST['price']) || empty($_FILES['image'])) {
-        if (empty($_POST['name'])) {
-          $nameError = "Category name is required";
-        }
-        if (empty($_POST['description'])) {
-          $descriptionError = "Description is required";
-        }
-        if (empty($_POST['category'])) {
-          $categoryError = "Category is required";
-        }
-        if (empty($_POST['quantity'])) {
-          $quantityError = "Quantity is required";
-        }elseif (is_numeric($_POST['quantity']) != 1) {
-          $quantityError = "Quantity must be integer";
-        }
-        if (empty($_POST['price'])) {
-          $priceError = "Price is required";
-        }elseif (is_numeric($_POST['price']) != 1) {
-          $priceError = "Price must be integer";
-        }
-        if (empty($_FILES['image'])) {
-          $imageError = "Image is required";
-        }
-      }else{ //validation success
-        $name = $_POST['name'];
-        $description = $_POST['description'];
-        $category = $_POST['category'];
-        $quantity = $_POST['quantity'];
-        $price = $_POST['price'];
-        $image = $_FILES['image']['name'];
+            if (empty($_POST['name'])) {
+              $nameError = "Category name is required";
+            }
+            if (empty($_POST['description'])) {
+              $descriptionError = "Description is required";
+            }
+            if (empty($_POST['category'])) {
+              $categoryError = "Category is required";
+            }
+            if (empty($_POST['quantity'])) {
+              $quantityError = "Quantity is required";
+            }
+            if (empty($_POST['price'])) {
+              $priceError = "Price is required";
+            }
+            if (empty($_FILES['image'])) {
+              $imageError = "Image is required";
+            }
+        }else{ //validation success
+            if (is_numeric($_POST['quantity']) != 1) {
+                $quantityError = "Quantity must be integer";
+            }
+            if (is_numeric($_POST['price']) != 1) {
+                $priceError = "Price must be integer";
+            }
+            
+            if ($quantityError == '' && $priceError == '') {
+                $name = $_POST['name'];
+                $description = $_POST['description'];
+                $category = $_POST['category'];
+                $quantity = $_POST['quantity'];
+                $price = $_POST['price'];
+                $image = $_FILES['image']['name'];
 
-        $targetFile = 'images/'.($_FILES['image']['name']);
-        $imageType = pathinfo($targetFile,PATHINFO_EXTENSION);
+                $targetFile = 'images/'.($_FILES['image']['name']);
+                $imageType = pathinfo($targetFile,PATHINFO_EXTENSION);
 
-        if ($imageType != 'jpg' && $imageType != 'jpeg' && $imageType && 'png') {
-          echo "<script>alert('Image must be jpg,jpeg or png')</script>";
+                if ($imageType != 'jpg' && $imageType != 'jpeg' && $imageType && 'png') {
+                  echo "<script>alert('Image must be jpg,jpeg or png')</script>";
+                }
+                move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
+
+                $stmt = $pdo->prepare("INSERT INTO products(name,description,category_id,quantity,price,image)
+                    VALUES (:name,:description,:category_id,:quantity,:price,:image)");
+                $result = $stmt->execute(
+                    array(':name'=>$name,':description'=>$description,':category_id'=>$category,':quantity'=>$quantity,':price'=>$price,':image'=>$image,)
+                  );
+                if ($result) {
+                  echo "<script>alert('Product add successful!');window.location.href='index.php';</script>";
+                }
+            }
         }
-        move_uploaded_file($_FILES['image']['tmp_name'],$targetFile);
-
-        $stmt = $pdo->prepare("INSERT INTO products(name,description,category_id,quantity,price,image)
-            VALUES (:name,:description,:category_id,:quantity,:price,:image)");
-        $result = $stmt->execute(
-            array(':name'=>$name,':description'=>$description,':category_id'=>$category,':quantity'=>$quantity,':price'=>$price,':image'=>$image,)
-          );
-        if ($result) {
-          echo "<script>alert('Product add successful!');window.location.href='index.php';</script>";
-        }
-
-      }
     }
 ?>
 <?php include 'header.php'; ?>

@@ -75,8 +75,12 @@
 					<div class="container">
 						<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 							<div class="col-first">
-								<h1>Welcome</h1>
-
+								<h1>Welcome <?php echo $_SESSION['user_name']; ?></h1>
+								<a href="logout.php" >
+									<button style="border: 1px solid white" type="submit" value="submit" class="primary-btn">
+										Log Out
+									</button>
+								</a>
 							</div>
 						</div>
 					</div>
