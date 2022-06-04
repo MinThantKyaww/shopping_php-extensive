@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../config.php';
-require '../commmon.php';
+require '../config/config.php';
+require '../config/commmon.php';
 
 if (!empty($_POST)) {
     $username=$_POST['name'];
@@ -9,8 +9,7 @@ if (!empty($_POST)) {
     $password=$_POST['password'];
     if ($username=='' || $email=='' || $password=='') {
         echo "<script>alert('fill the form data')</script>";
-    }
-    else {
+    }else {
         $sql="SELECT COUNT(email) AS num FROM users WHERE email = :email";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':email',$email);
@@ -20,8 +19,7 @@ if (!empty($_POST)) {
 
         if ($row['num']>0) {
             echo "<script>alert('This user already exict,try again!')</script>";
-        }
-        else {
+        }else {
             $passwordHash = password_hash($password,PASSWORD_BCRYPT);
 
             $sql = "INSERT INTO users(name,email,password,role) VALUES(:name,:email,:password,:role)";
@@ -39,7 +37,6 @@ if (!empty($_POST)) {
         }
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

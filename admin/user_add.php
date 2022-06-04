@@ -45,13 +45,10 @@ if (!empty($_POST)) {
         $stmt->bindValue(':role',$role);
         $stmt->execute();
 
-    header('location: user_listenings.php');
-    exit();
+        header('location: user_listenings.php');
+        exit();
     }
-    
-    }
-    
-    
+}   
 ?>
 
 <?php include('header.php');?> 

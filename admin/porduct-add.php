@@ -39,7 +39,7 @@
                 $priceError = "Price must be integer";
             }
             
-            if ($quantityError == '' && $priceError == '') {
+            if (!isset($quantityError) && !isset($priceError)) {
                 $name = $_POST['name'];
                 $description = $_POST['description'];
                 $category = $_POST['category'];
@@ -61,7 +61,7 @@
                     array(':name'=>$name,':description'=>$description,':category_id'=>$category,':quantity'=>$quantity,':price'=>$price,':image'=>$image,)
                   );
                 if ($result) {
-                  echo "<script>alert('Product add successful!');window.location.href='index.php';</script>";
+                    echo "<script>alert('Product add successful!');window.location.href='index.php';</script>";
                 }
             }
         }

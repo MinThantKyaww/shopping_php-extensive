@@ -15,19 +15,37 @@
 ?>
 
 <?php
-  $currentDate = date("Y-m-d");
-  $fromDate = date("Y-m-d",strtotime($currentDate . '+1 day'));
-  $toDate = date("Y-m-d",strtotime($currentDate . '-7 day'));
+  if (!empty($_POST)) {
+    $toDate = $_POST['toDate'];
+    $fromDate = $_POST['fromDate'];
 
-  $pdostatement = $pdo->prepare("SELECT * FROM sale_orders WHERE order_date<:fromDate AND order_date>=:toDate 
-    ORDER BY  order_date");
-  $pdostatement->execute([':fromDate'=>$fromDate,':toDate'=>$toDate]);
-  $result = $pdostatement->fetchAll();
+    $pdostatement = $pdo->prepare("SELECT * FROM sale_orders WHERE order_date>=:fromDate AND order_date<:toDate 
+      ORDER BY  order_date");
+    $pdostatement->execute([':fromDate'=>$fromDate,':toDate'=>$toDate]);
+    $result = $pdostatement->fetchAll();
+  }else{
+    $currentDate = date("Y-m-d");
+    $fromDate = date("Y-m-d",strtotime($currentDate . '+1 day'));
+    $toDate = date("Y-m-d",strtotime($currentDate . '-7 day'));
+
+    $pdostatement = $pdo->prepare("SELECT * FROM sale_orders WHERE order_date<:fromDate AND order_date>=:toDate 
+      ORDER BY  order_date");
+    $pdostatement->execute([':fromDate'=>$fromDate,':toDate'=>$toDate]);
+    $result = $pdostatement->fetchAll();
+  }
 ?>
 <?php include 'header.php'; ?>
     <div class="content-wrapper">
       <div class="card-body">
         <h1>Weekly report</h1>
+        <form action="weekly-report.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+          <label>StartDate</label>
+          <input type="date" name="fromDate">
+          <label>EndDate</label>
+          <input type="date" name="toDate">
+          <input type="submit" name="Submit">
+        </form>
           <table id="data-table" class="table table-bordered">
               <thead>
                   <tr>

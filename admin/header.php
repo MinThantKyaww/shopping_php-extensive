@@ -30,53 +30,53 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-      </ul>
-      <ul class="navbar-nav ml-auto">
-        <!-- Navbar Search -->
-        <?php
-          $link = $_SERVER['PHP_SELF'];
-          $link_array = explode('/',$link);
-          $page = end($link_array);
-        ?>  
-        <?php if ($page == 'index.php' || $page == 'category.php' || $page == 'user_listenings.php') {?>
-        <li class="nav-item">
-          <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-            <i class="fas fa-search"></i>
-          </a>
-          <div class="navbar-search-block">
-            <form method="post" 
-              <?php if ($page == 'index.php'): ?>
-                action='index.php'
-              <?php elseif ($page == 'category.php'): ?>
-                action='category.php'
-              <?php elseif ($page == 'user_listenings.php'): ?>
-                action='user_listenings.php'
-              <?php endif; ?> 
-            >
-              <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
-              <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" name="search" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                  <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
-                  <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <?php
+        $link = $_SERVER['PHP_SELF'];
+        $link_array = explode('/',$link);
+        $page = end($link_array);
+      ?>  
+      <?php if ($page == 'index.php' || $page == 'category.php' || $page == 'user_listenings.php') {?>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <form method="post" 
+            <?php if ($page == 'index.php'): ?>
+              action='index.php'
+            <?php elseif ($page == 'category.php'): ?>
+              action='category.php'
+            <?php elseif ($page == 'user_listenings.php'): ?>
+              action='user_listenings.php'
+            <?php endif; ?> 
+          >
+            <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-navbar" name="search" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
               </div>
-            </form>
-          </div>
-        </li>
-        <?php
-        }?>
-      </ul>
-    </nav>
+            </div>
+          </form>
+        </div>
+      </li>
+      <?php
+      }?>
+    </ul>
+  </nav>
     <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">

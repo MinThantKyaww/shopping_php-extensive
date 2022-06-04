@@ -22,7 +22,7 @@
   else {
     $pageno = 1;
   }
-    $frames = 1;
+    $frames = 5;
     $offset = ($pageno - 1) * $frames;
     
     $pdostatement = $pdo->prepare("SELECT * FROM sale_order_details WHERE sale_order_id=$id");

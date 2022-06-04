@@ -1,9 +1,3 @@
-</div>
-</div>
-</div>
-
-
-
 <!-- start footer Area -->
 <footer class="footer-area section_gap" style="padding-top: 20px !important;">
 <div class="container">

@@ -15,16 +15,32 @@
 ?>
 
 <?php
-  $limit = 2;
-  $pdostatement = $pdo->prepare("SELECT * FROM sale_order_details WHERE quantity>:limit
-    ORDER BY quantity desc");
-  $pdostatement->execute([':limit'=>$limit]);
-  $result = $pdostatement->fetchAll();
+  if (!empty($_POST)) {
+    $limit = $_POST['amount'];
+    $pdostatement = $pdo->prepare("SELECT product_id,SUM(quantity)as sum,order_date FROM sale_order_details
+     GROUP BY product_id HAVING SUM(quantity)>= $limit");
+    $pdostatement->execute([':limit'=>$limit]);
+    $result = $pdostatement->fetchAll();
+  } else {
+    $limit = 5;
+    $pdostatement = $pdo->prepare("SELECT product_id,SUM(quantity)as sum,order_date FROM sale_order_details
+     GROUP BY product_id HAVING SUM(quantity)>= $limit");
+    $pdostatement->execute([':limit'=>$limit]);
+    $result = $pdostatement->fetchAll();
+  }
+  
 ?>
 <?php include 'header.php'; ?>
     <div class="content-wrapper">
       <div class="card-body">
         <h1>Best selling items</h1>
+        <form action="best-selling-item.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+          <p>Default is 5</p>
+          <label>Greater than this amount</label>
+          <input type="number" name="amount">
+          <input type="submit" name="Submit">
+        </form>
           <table id="data-table" class="table table-bordered">
               <thead>
                   <tr>
@@ -47,7 +63,7 @@
                   <tr>
                       <td><?php echo $i?></td>
                       <td><?php echo escape($userResult[0]['name'])?></td>
-                      <td><?php echo escape($value['quantity'])?></td>
+                      <td><?php echo escape($value['sum'])?></td>
                       <td><?php echo date('Y-m-d',strtotime($value['order_date']))?></td>
                   </tr>
                   <?php

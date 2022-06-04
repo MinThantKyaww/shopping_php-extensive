@@ -15,16 +15,30 @@
 ?>
 
 <?php
-  $limit = 300000;
-  $pdostatement = $pdo->prepare("SELECT * FROM sale_orders WHERE total_price>:limit 
-    ORDER BY  total_price desc");
-  $pdostatement->execute([':limit'=>$limit]);
-  $result = $pdostatement->fetchAll();
+  if ($_POST) {
+    $limit = $_POST['amount'];
+    $pdostatement = $pdo->prepare("SELECT user_id,SUM(total_price) as sum,order_date FROM sale_orders GROUP BY user_id HAVING SUM(total_price)>=$limit");
+    $pdostatement->execute([':limit'=>$limit]);
+    $result = $pdostatement->fetchAll();
+    // print'<pre>';print_r($result);exit();
+  }else{
+    $limit = 500000;
+    $pdostatement = $pdo->prepare("SELECT user_id,SUM(total_price) as sum,order_date FROM sale_orders GROUP BY user_id HAVING SUM(total_price)>=$limit");
+    $pdostatement->execute([':limit'=>$limit]);
+    $result = $pdostatement->fetchAll();
+  }
 ?>
 <?php include 'header.php'; ?>
     <div class="content-wrapper">
       <div class="card-body">
         <h1>Royal customers</h1>
+        <form action="royal-customer.php" method="post">
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+          <p>Default is 500000</p>
+          <label>Greater than this amount</label>
+          <input type="number" name="amount">
+          <input type="submit" name="Submit">
+        </form>
           <table id="data-table" class="table table-bordered">
               <thead>
                   <tr>
@@ -47,7 +61,7 @@
                   <tr>
                       <td><?php echo $i?></td>
                       <td><?php echo escape($userResult[0]['name'])?></td>
-                      <td><?php echo escape($value['total_price'])?></td>
+                      <td><?php echo escape($value['sum'])?></td>
                       <td><?php echo date('Y-m-d',strtotime($value['order_date']))?></td>
                   </tr>
                   <?php

@@ -6,46 +6,48 @@ require '../config/common.php';
 if (!empty($_POST)) {
     $email=$_POST['email'];
     $password=$_POST['password'];
-    if (empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
-      if (empty($_POST['email'])) {
-            $emailError = 'email cannot be empty';
-        }
-        if (empty($_POST['password'])) {
-            $passwordError = 'password cannot be empty';
-        }
-        if (strlen($_POST['password']) < 4) {
-            $passwordError = 'password must be al least 4 characters';
-        }
-    } else {
-      $sql="SELECT * FROM users WHERE email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':email',$email);
-    // $stmt->bindValue(':password',$password);
-    $stmt->execute();
 
-    $user=$stmt->fetch(PDO::FETCH_ASSOC);
-    if (empty($user)) {
-        echo "<script>alert('wrong user');</script>";
-    }
-    else{
-        $passwordValid= password_verify($password,$user['password']);
-        if ($passwordValid){
-            if ($user['role'] == 1) {
-              $_SESSION['user_name']=$user['name'];
-              $_SESSION['user_id']=$user['id'];
-              $_SESSION['logged_in']=time();
-              $_SESSION['role']=$user['role'];
-              header('location: index.php');
-              exit();
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+      if (empty($_POST['email'])) {
+        $emailError = 'email cannot be empty';
+      }
+      if (empty($_POST['password'])) {
+        $passwordError = 'password cannot be empty';
+      }
+    }else{
+      if (strlen($_POST['password']) < 4) {
+        $passwordError = 'password must be al least 4 characters';
+      }else{
+        $sql="SELECT * FROM users WHERE email = :email";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':email',$email);
+        // $stmt->bindValue(':password',$password);
+        $stmt->execute();
+
+        $user=$stmt->fetch(PDO::FETCH_ASSOC);
+        if (empty($user)) {
+          echo "<script>alert('wrong user');</script>";
+        }
+        else{
+            $passwordValid= password_verify($password,$user['password']);
+            if ($passwordValid){
+                if ($user['role'] == 1) {
+                    $_SESSION['user_name']=$user['name'];
+                    $_SESSION['user_id']=$user['id'];
+                    $_SESSION['logged_in']=time();
+                    $_SESSION['role']=$user['role'];
+                    
+                    header('location: index.php');
+                    exit();
+                }else{
+                  echo "<script>alert('U are not admin');</script>";
+                }              
             }else{
-              echo "<script>alert('U are not admin');</script>";
+              echo "<script>alert('wrong password ')</script>";
             }
         }
-    else{
-        echo "<script>alert('wrong password ')</script>";
-        }
-}
-    }
+      } 
+    }        
 }
 ?>
 <!DOCTYPE html>

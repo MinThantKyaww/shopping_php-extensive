@@ -4,38 +4,42 @@ require 'config/config.php';
 require 'config/common.php';
 
 if ($_POST) {
-	if (empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
+	if (empty($_POST['email']) || empty($_POST['password'])) {
 		if (empty($_POST['email'])) {
 			$emailError = "1";
 		}
 		if (empty($_POST['password'])) {
-			$passwordError = "1";
-		}
-		if (strlen($_POST['password']) < 4) {
-			$passwordError = "Password must be al lesat 4 characters";
+			$passwordError = "Password cannot be empty";
 		}
 	}else{
-		$email = $_POST['email'];
-		$password =  $_POST['password'];
+		if (strlen($_POST['password']) < 4) {
+			$passwordError = "Password must be al lesat 4 characters";
+		}else{
+			$email = $_POST['email'];
+			$password =  $_POST['password'];
 
-		$stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email");
-		$stmt->execute(
-			[':email'=>$email]
-		);
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			$stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email");
+			$stmt->execute(
+				[':email'=>$email]
+				);
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($result) {
-			if (password_verify($password,$result['password'])) {
-				$_SESSION['user_id'] = $result['id'];
-				$_SESSION['user_name'] = $result['name'];
-				$_SESSION['logged_in'] = time();
+			if ($result) {
+				if (password_verify($password,$result['password'])) {
+					$_SESSION['user_id'] = $result['id'];
+					$_SESSION['user_name'] = $result['name'];
+					$_SESSION['logged_in'] = time();
+					$_SESSION['role'] = $result['role'];
 
-				header("location: index.php");
+					header("location: index.php");
+				
+				}else{
+					echo "<script>alert('Incorrect password');window.location.href='login.php';</script>";
+				}
 			}else{
-				echo "<script>alert('Incorrect password');window.location.href='login.php';</script>";
+				echo "<script>alert('Wrong user');window.location.href='login.php';</script>";
 			}
 		}
-
 	}
 }
 ?>
@@ -56,7 +60,7 @@ if ($_POST) {
 	<!-- meta character set -->
 	<meta charset="UTF-8">
 	<!-- Site Title -->
-	<title>Karma Shop</title>
+	<title>Shopping site</title>
 
 	<!--
 		CSS
@@ -72,43 +76,6 @@ if ($_POST) {
 </head>
 
 <body>
-
-	<!-- Start Header Area -->
-	<header class="header_area sticky-header">
-		<div class="main_menu">
-			<nav class="navbar navbar-expand-lg navbar-light main_box">
-				<div class="container">
-					<!-- Brand and toggle get grouped for better mobile display -->
-					<a class="navbar-brand logo_h" href="index.html"><h4>AP Shopping<h4></a>
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<!-- Collect the nav links, forms, and other content for toggling -->
-					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="#" class="cart"><span class="ti-bag"></span></a></li>
-							<li class="nav-item">
-								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</nav>
-		</div>
-		<div class="search_input" id="search_input_box">
-			<div class="container">
-				<form class="d-flex justify-content-between">
-					<input type="text" class="form-control" id="search_input" placeholder="Search Here">
-					<button type="submit" class="btn"></button>
-					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
-				</form>
-			</div>
-		</div>
-	</header>
-	<!-- End Header Area -->
 
 	<!-- Start Banner Area -->
 	<section class="banner-area organic-breadcrumb">
@@ -139,14 +106,18 @@ if ($_POST) {
 				<div class="col-lg-6">
 					<div class="login_form_inner">
 						<h3>Log in to enter</h3>
-						<form class="row login_form" action="login.php" method="post" id="contactForm" novalidate="novalidate">
+						<form class="row login_form" action="login.php" method="post" id="contactForm" 
+						novalidate="novalidate">
 							<input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
 							<div class="col-md-12 form-group">
 								<input type="email" class="form-control" id="name" name="email" placeholder="Email"
 								style="<?php echo empty($emailError) ? '' : 'border-bottom: 1px solid red;';?>" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="password" class="form-control" id="name" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+								<input type="password" class="form-control" id="name" name="password"
+								 placeholder="Password" onfocus="this.placeholder = ''
+								 "onblur="this.placeholder = 'Password'"
+								 style="<?php echo empty($passwordError) ? '' : 'border-bottom: 1px solid red;';?>">
 								<p style="text-align: left;"><?php echo empty($passwordError) ? '' : $passwordError;?></p>
 							</div><br><br>
 							<div class="col-md-12 form-group">

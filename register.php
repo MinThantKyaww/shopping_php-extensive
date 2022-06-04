@@ -5,7 +5,7 @@ require 'config/common.php';
 
 if ($_POST) {
 	if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['address'])
-	 || empty($_POST['password']) || strlen($_POST['password']) < 4) {
+	 || empty($_POST['password'])) {
 		if (empty($_POST['name'])) {
 			$nameError = "1";
 		}
@@ -19,38 +19,38 @@ if ($_POST) {
 			$addressError = "1";
 		}
 		if (empty($_POST['password'])) {
-			$passwordError = "1";
-		}
-		if (strlen($_POST['password']) < 4) {
-			$passwordError = "Password must be al lesat 4 characters";
+			$passwordError = "Password cannot be empty";
 		}
 	}else{
-		$name = $_POST['name'];
-		$email = $_POST['email'];
-		$phone = $_POST['phone'];
-		$address = $_POST['address'];
-		$password = $_POST['password'];
-		$passwordHash = password_hash($_POST['password'],PASSWORD_BCRYPT);
-
-		$stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email");
-		$stmt->execute(
-			[':email'=>$email]
-		);
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-		if ($result) {
-			echo "<script>alert('Email already exist');</script>";
+		if (strlen($_POST['password']) < 4) {
+			$passwordError = "Password must be al lesat 4 characters";
 		}else{
-			$stmt = $pdo->prepare("INSERT INTO users(name,email,phone,address,password) VALUES 
-				(:name,:email,:phone,:address,:password)");
+			$name = $_POST['name'];
+			$email = $_POST['email'];
+			$phone = $_POST['phone'];
+			$address = $_POST['address'];
+			$password = $_POST['password'];
+			$passwordHash = password_hash($_POST['password'],PASSWORD_BCRYPT);
+
+			$stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email");
 			$stmt->execute(
-				array(':name'=>$name,':email'=>$email,
-					':phone'=>$phone,':address'=>$address,':password'=>$passwordHash)
-			);
+					[':email'=>$email]
+				);
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-			echo "<script>alert('Successfully registered.U can now log in');window.location.href='login.php';</script>";
+			if ($result) {
+				echo "<script>alert('Email already exist');</script>";
+			}else{
+				$stmt = $pdo->prepare("INSERT INTO users(name,email,phone,address,password) VALUES 
+					(:name,:email,:phone,:address,:password)");
+				$stmt->execute(
+					array(':name'=>$name,':email'=>$email,
+						':phone'=>$phone,':address'=>$address,':password'=>$passwordHash)
+					);
+
+				echo "<script>alert('Successfully registered.U can now log in');window.location.href='login.php';</script>";
+			}
 		}
-
 	}
 }
 ?>
@@ -168,7 +168,8 @@ if ($_POST) {
 							</div>
 							<div class="col-md-12 form-group">
 								<input type="password" class="form-control" id="name" name="password" 
-								placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+								placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'"
+								style="<?php echo empty($passwordError) ? '' : 'border-bottom: 1px solid red;';?>">
 								<p style="text-align: left;"><?php echo empty($passwordError) ? '' : $passwordError;?></p>
 							</div><br><br>
 							<div class="col-md-12 form-group">

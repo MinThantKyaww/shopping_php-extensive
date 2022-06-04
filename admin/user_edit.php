@@ -14,24 +14,22 @@
         }else{
             $role = 1;
         }
-
       
         if (empty($_POST['name']) || empty($_POST['email'])) {
             if (empty($_POST['name'])) {
-            $nameError = 'name cannot be empty';
-        }
-        if (empty($_POST['email'])) {
-            $emailError = 'email cannot be empty';
-        }
+                $nameError = 'name cannot be empty';
+            }
+            if (empty($_POST['email'])) {
+                $emailError = 'email cannot be empty';
+            }
         } else {
             $pdostatement= $pdo->prepare("UPDATE users SET name='$name',email='$email',role='$role',
-                updated_at='$updated_at' WHERE id ='$id'");
-        $result = $pdostatement->execute();
-        if($result) {
+            updated_at='$updated_at' WHERE id ='$id'");
+            $result = $pdostatement->execute();
+            if($result) {
               echo "<script>alert('record update successful:');window.location.href='user_listenings.php';</script>";
-          }
-        }
-        
+            }
+        }   
     }
 
        $pdo_statement = $pdo->prepare("SELECT * FROM users WHERE id=".$_GET['id']);
